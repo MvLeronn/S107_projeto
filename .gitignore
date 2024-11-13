@@ -1,2 +1,4 @@
 __pycache__
 jenkins_compose
+dist/*
+atendimento_project.egg-info
