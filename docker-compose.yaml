@@ -1,0 +1,12 @@
+  # docker-compose.yaml
+  services:
+    jenkins:
+      image: python_jenkins
+      container_name: jenkins
+      privileged: true
+      user: root
+      ports:
+       - 8080:8080
+       - 50000:50000
+      volumes:
+        - ./jenkins_compose/jenkins_configuration:/var/jenkins_home

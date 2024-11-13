@@ -1,0 +1,11 @@
+# Define nossa imagem base
+FROM jenkins/jenkins
+
+# Define nosso usuario dentro do container
+USER root
+
+# Executa comandos para instalar o python
+RUN apt-get update
+RUN apt-get install -y python3
+
+USER jenkins
