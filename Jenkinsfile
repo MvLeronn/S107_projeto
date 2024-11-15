@@ -24,4 +24,9 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            archiveArtifacts artifacts: 'dist/*tar.gz, test_report/*', fingerprint: true
+        }
+    }
 }

@@ -2,6 +2,7 @@ import unittest
 import atendimentoService
 import horarios
 import json
+import HtmlTestRunner
 
 class TestAtendimentoClass(unittest.TestCase):
     def test_nome_professor_predio_um(self):
@@ -58,4 +59,4 @@ class TestAtendimentoClass(unittest.TestCase):
             atendimentoPredio = atendimentoService.montarAtendimento("{\"nomeDoProfessor\": \"Chris Lima\", \"horarioDeAtendimento\": \"Segunda:17:30\"")
     
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='test_report'))
