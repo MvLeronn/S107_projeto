@@ -18,9 +18,18 @@ pipeline {
             }
         }
         stage('Build'){
-            steps{
+            steps {
                 echo 'Building and generating test report'
                 sh "python3 -m build"
+            }
+        }
+        stage('Notification'){
+            steps {
+            echo 'Sending email with mailutils...'
+            sh '''
+            chmod +x scripts/send_email.sh
+            ./scripts/send_email.sh
+            '''
             }
         }
     }
