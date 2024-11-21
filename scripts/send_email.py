@@ -4,9 +4,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def send_email(to_email):
-    if not to_email:
-        raise ValueError("O endereço de e-mail do destinatário não foi definido.")
-
     subject = "Pipeline Executado"
     body = "Pipeline executado com sucesso"
     from_email = os.getenv('FROM_EMAIL', '').strip()
@@ -20,6 +17,7 @@ def send_email(to_email):
     msg['To'] = to_email
     msg['Subject'] = subject
 
+    # Usar 'utf-8' na codificação do corpo do e-mail
     msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
     try:
