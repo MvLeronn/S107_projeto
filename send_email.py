@@ -6,15 +6,18 @@ from email.mime.multipart import MIMEMultipart
 def send_email(to_email):
     subject = "Pipeline Executado"
     body = "Pipeline executado com sucesso"
-    from_email = os.getenv('FROM_EMAIL', '').replace('\xa0', '').strip()
-    password = os.getenv('EMAIL_PASSWORD', '').replace('\xa0', '').strip()
+    from_email = os.getenv('FROM_EMAIL', '').strip()
+    password = os.getenv('EMAIL_PASSWORD', '').strip()
+
+    if not from_email or not password:
+        raise ValueError("As variáveis de ambiente FROM_EMAIL ou EMAIL_PASSWORD não estão configuradas.")
 
     msg = MIMEMultipart()
     msg['From'] = from_email
     msg['To'] = to_email
     msg['Subject'] = subject
 
-    # Alterar para 'utf-8' ao invés de 'plain'
+    # Usar 'utf-8' na codificação do corpo do e-mail
     msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
     try:
@@ -27,13 +30,13 @@ def send_email(to_email):
         print(f"E-mail enviado com sucesso para {to_email}")
     except Exception as e:
         print(f"Falha ao enviar e-mail: {str(e)}")
+        raise
 
 if __name__ == "__main__":
-    commit_author_email = os.getenv('COMMIT_AUTHOR_EMAIL')
-    
-    # Remover espaços não separáveis e outros caracteres não ASCII
-    commit_author_email = commit_author_email.replace('\xa0', ' ').strip()
+    commit_author_email = os.getenv('COMMIT_AUTHOR_EMAIL', '').strip()
+
+    if not commit_author_email:
+        raise ValueError("A variável de ambiente COMMIT_AUTHOR_EMAIL não está configurada.")
 
     print(f"Commit Author Email (sanitizado): {commit_author_email}")
     send_email(commit_author_email)
-
