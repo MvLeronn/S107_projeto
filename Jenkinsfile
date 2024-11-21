@@ -28,20 +28,19 @@ pipeline {
         }
         stage('Send Email Notification') {
             steps {
-                echo 'Sending notification email...'
                 script {
-                    // Capturar o e-mail do autor do commit
+                    // Captura o e-mail do autor do commit
                     def commitAuthorEmail = sh(
                         script: "git log -1 --pretty=format:'%ae'",
                         returnStdout: true
                     ).trim()
 
-                    // Substituir por um e-mail válido caso o capturado seja inválido
+                    // Substituir por um fallback dinâmico, caso o capturado seja inválido
                     if (commitAuthorEmail.contains('noreply.github.com')) {
-                        commitAuthorEmail = 'marcos.v@ges.inatel.br' // Substitua pelo e-mail correto
+                        commitAuthorEmail = env.DEFAULT_FALLBACK_EMAIL // Fallback vindo do ambiente
                     }
 
-                    // Passar as variáveis de ambiente para o script Python
+                    // Passa o e-mail como variável de ambiente para o script Python
                     withEnv([
                         'FROM_EMAIL=' + env.FROM_EMAIL,
                         'EMAIL_PASSWORD=' + env.EMAIL_PASSWORD,
