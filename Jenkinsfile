@@ -1,9 +1,10 @@
 pipeline {
     agent any
     environment {
-        FROM_EMAIL = credentials('FROM_EMAIL')  // Credenciais do e-mail remetente
-        EMAIL_PASSWORD = credentials('EMAIL_PASSWORD') // Senha do e-mail remetente
+        FROM_EMAIL = credentials('FROM_EMAIL_CREDENTIALS')
+        EMAIL_PASSWORD = credentials('FROM_EMAIL_CREDENTIALS')  // Ajuste o uso do mesmo ID, se necessário
     }
+
     stages {
         stage('Install') {
             steps {
