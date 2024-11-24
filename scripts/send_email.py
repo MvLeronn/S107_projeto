@@ -38,5 +38,5 @@ if __name__ == "__main__":
     if not commit_author_email:
         raise ValueError("A variável de ambiente COMMIT_AUTHOR_EMAIL não está configurada.")
 
-    print(f"Commit Author Email (sanitizado): {commit_author_email}")
+    print(f"E-mail do autor do commit: {commit_author_email}")
     send_email(commit_author_email)
