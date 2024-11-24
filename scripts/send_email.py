@@ -35,8 +35,8 @@ def send_email(to_email):
 if __name__ == "__main__":
     commit_author_email = os.getenv('COMMIT_AUTHOR_EMAIL', '').strip()
 
-    if not commit_author_email:
-        raise ValueError("A variável de ambiente COMMIT_AUTHOR_EMAIL não está configurada.")
+    if not commit_author_email or 'noreply' in commit_author_email:
+        raise ValueError(f"E-mail do autor do commit é inválido: {commit_author_email}")
 
     print(f"E-mail do autor do commit: {commit_author_email}")
     send_email(commit_author_email)
