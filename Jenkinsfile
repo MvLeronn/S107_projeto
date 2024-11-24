@@ -36,12 +36,14 @@ pipeline {
                         returnStdout: true
                     ).trim()
 
-                    // Substituir por um e-mail válido caso o capturado seja inválido
-                    if (commitAuthorEmail.contains('noreply.github.com')) {
-                        commitAuthorEmail = 'marcos.v@ges.inatel.br' // Substitua pelo e-mail correto
+                    // Validar e substituir e-mail inválido
+                    if (commitAuthorEmail.contains('noreply.github.com') || commitAuthorEmail.isEmpty()) {
+                        commitAuthorEmail = 'default.email@domain.com' // Substitua pelo e-mail padrão correto
                     }
 
-                    // Passar as variáveis de ambiente para o script Python
+                    echo "E-mail do autor do commit: ${commitAuthorEmail}"
+
+                    // Passar o e-mail como variável de ambiente
                     withEnv([
                         'FROM_EMAIL=' + env.FROM_EMAIL,
                         'EMAIL_PASSWORD=' + env.EMAIL_PASSWORD,
