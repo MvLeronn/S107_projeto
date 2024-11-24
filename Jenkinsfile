@@ -5,15 +5,22 @@ pipeline {
         EMAIL_PASSWORD = credentials('EMAIL_PASSWORD') // Senha do e-mail remetente
     }
     stages {
+        stage('Debug Workspace') {
+            steps {
+                echo 'Verificando o repositório...'
+                sh 'git status'
+                sh 'git log -1 --pretty=format:"%ae"'
+            }
+        }
         stage('Install') {
             steps {
-                echo 'Installing requirements...'
+                echo 'Instalando dependências...'
                 sh "pip install -r requirements.txt --break-system-packages"
             }
         }
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo 'Executando testes...'
                 sh '''
                 python3 -m unittest
                 python3 tests.py
@@ -22,13 +29,13 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo 'Building the application...'
+                echo 'Construindo a aplicação...'
                 sh "python3 -m build"
             }
         }
         stage('Send Email Notification') {
             steps {
-                echo 'Sending notification email...'
+                echo 'Enviando notificação por e-mail...'
                 script {
                     // Capturar o e-mail do autor do commit
                     def commitAuthorEmail = sh(
@@ -36,12 +43,15 @@ pipeline {
                         returnStdout: true
                     ).trim()
 
+                    echo "E-mail capturado do commit: ${commitAuthorEmail}"
+
                     // Validar e substituir e-mail inválido
                     if (commitAuthorEmail.contains('noreply.github.com') || commitAuthorEmail.isEmpty()) {
-                        commitAuthorEmail = 'default.email@domain.com' // Substitua pelo e-mail padrão correto
+                        echo "E-mail inválido capturado (${commitAuthorEmail}), utilizando e-mail padrão."
+                        commitAuthorEmail = 'admin@domain.com' // Substitua pelo e-mail padrão correto
                     }
 
-                    echo "E-mail do autor do commit: ${commitAuthorEmail}"
+                    echo "E-mail final do autor do commit: ${commitAuthorEmail}"
 
                     // Passar o e-mail como variável de ambiente
                     withEnv([
@@ -57,7 +67,7 @@ pipeline {
     }
     post {
         always {
-            echo 'Pipeline execution completed.'
+            echo 'Execução do pipeline concluída.'
             archiveArtifacts artifacts: 'dist/*.tar.gz, test_report/*', fingerprint: true
         }
     }
